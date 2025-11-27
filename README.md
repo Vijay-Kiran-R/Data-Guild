@@ -17,7 +17,7 @@ Built on the **Google Agent Development Kit (ADK)**, it features a unique **Iter
 
 The system operates as a strict pipeline of specialized stages, orchestrated by a central state machine.
 
-![Autonomous Agent Guild Flow](Data_agent/Data_Guild_WorkFlow.png)
+![Autonomous Agent Guild Flow](Data_Guild_WorkFlow.png)
 
 ---
 
