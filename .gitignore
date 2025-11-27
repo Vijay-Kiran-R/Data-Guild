@@ -1,0 +1,18 @@
+# --- Environment Variables ---
+.env
+
+# --- Python Cache ---
+__pycache__/
+*.pyc
+
+# --- Runtime Logs ---
+logs/
+
+# --- Session Data (Runtime State) ---
+session_storage/
+
+# --- Database (Vector DB) ---
+chroma_db/
+
+# --- Data Storage (Input/Output CSVs) ---
+#data_storage/

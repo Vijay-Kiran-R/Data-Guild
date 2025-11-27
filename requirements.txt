@@ -1,0 +1,23 @@
+# --- Core Framework ---
+google-genai
+chromadb
+google-adk
+python-dotenv
+mcp
+opentelemetry-api
+opentelemetry-sdk
+
+# --- Data Processing ---
+pandas
+numpy
+openpyxl 
+lxml                    
+tabulate
+plotly          
+
+# --- Visualization ---
+matplotlib  
+seaborn                 
+scipy               
+statsmodels            
+scikit-learn           
