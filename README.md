@@ -79,6 +79,11 @@ The **Critic Agent** prevents hallucinations by verifying insights against the r
 ### 7. 🔒 Secure Data Architecture
 * **Local Data Access (MCP)**: Files are accessed via a custom **Model Context Protocol (MCP)** server, ensuring agents only touch whitelisted data.
 * **Knowledge Base Integration**: Includes a mock client to fetch domain-specific validation schemas, ensuring data adheres to business rules.
+
+### 8. 🧩 Agent-to-Agent (A2A) Discovery
+The system implements a dynamic **Service Registry Protocol** (`a2a_registry.py`):
+* **Capability Cards**: Agents register their skills (e.g., `clean_data`, `generate_report`) via standardized `AgentCards`.
+* **Dynamic Routing**: The Orchestrator queries the registry to find the best agent for a task, enabling modular expansion without rewriting core logic.
 ---
 
 ## 🛠️ Architecture
