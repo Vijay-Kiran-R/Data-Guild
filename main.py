@@ -9,6 +9,8 @@ import logging
 import warnings
 import glob
 from datetime import datetime
+import shutil
+from infrastructure.file_browser import browse_for_file
 warnings.simplefilter(action='ignore', category=FutureWarning) 
 
 logging.getLogger("google_genai").setLevel(logging.WARNING)
@@ -117,9 +119,39 @@ def select_dataset():
     
     if not datasets:
         print_warning("No datasets found in data_storage/")
-        custom_path = input(print_prompt("\nEnter full path to CSV file (or press Enter to skip): "))
-        if custom_path and os.path.exists(custom_path):
-            return custom_path
+        print(f"  {Colors.BOLD}[B]{Colors.ENDC} Browse System")
+        
+        choice = input(print_prompt("\nEnter full path to CSV file (or press Enter to skip, B to browse): "))
+        
+        if choice.upper() == "B":
+            print_info("Opening file browser...")
+            selected_file = browse_for_file()
+            if selected_file:
+                # Copy to data_storage
+                dest_dir = "data_storage"
+                if not os.path.exists(dest_dir):
+                    os.makedirs(dest_dir)
+                
+                filename = os.path.basename(selected_file)
+                dest_path = os.path.join(dest_dir, filename)
+                
+                # Handle duplicate names
+                if os.path.exists(dest_path):
+                    base, ext = os.path.splitext(filename)
+                    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                    dest_path = os.path.join(dest_dir, f"{base}_{timestamp}{ext}")
+                
+                try:
+                    shutil.copy2(selected_file, dest_path)
+                    print_success(f"File imported to: {dest_path}")
+                    return dest_path
+                except Exception as e:
+                    print_error(f"Failed to copy file: {e}")
+                    return None
+            return None
+
+        if choice and os.path.exists(choice):
+            return choice
         return None
     
     print_info("Available datasets:")
@@ -129,11 +161,41 @@ def select_dataset():
         mod_time = datetime.fromtimestamp(os.path.getmtime(dataset)).strftime("%Y-%m-%d %H:%M")
         print(f"  {Colors.BOLD}[{i}]{Colors.ENDC} {os.path.basename(dataset):<30} ({size_kb:.1f} KB, modified: {mod_time})")
     
+    print(f"  {Colors.BOLD}[B]{Colors.ENDC} Browse System")
     print(f"  {Colors.BOLD}[0]{Colors.ENDC} Enter custom path")
     
     while True:
         try:
-            choice = input(print_prompt("\nSelect dataset [1-{}] (or 0 for custom): ".format(len(datasets))))
+            choice = input(print_prompt("\nSelect dataset [1-{}] (or 0 for custom, B to browse): ".format(len(datasets))))
+            if choice.upper() == "B":
+                print_info("Opening file browser...")
+                selected_file = browse_for_file()
+                if selected_file:
+                    # Copy to data_storage
+                    dest_dir = "data_storage"
+                    if not os.path.exists(dest_dir):
+                        os.makedirs(dest_dir)
+                    
+                    filename = os.path.basename(selected_file)
+                    dest_path = os.path.join(dest_dir, filename)
+                    
+                    # Handle duplicate names
+                    if os.path.exists(dest_path):
+                        base, ext = os.path.splitext(filename)
+                        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                        dest_path = os.path.join(dest_dir, f"{base}_{timestamp}{ext}")
+                    
+                    try:
+                        shutil.copy2(selected_file, dest_path)
+                        print_success(f"File imported to: {dest_path}")
+                        return dest_path
+                    except Exception as e:
+                        print_error(f"Failed to copy file: {e}")
+                        continue
+                else:
+                    print_warning("No file selected.")
+                    continue
+
             if choice == "0":
                 custom_path = input(print_prompt("Enter full path to CSV file: "))
                 if os.path.exists(custom_path):
@@ -330,12 +392,27 @@ async def main():
                 if session_manager.state == "IDLE":
                     dataset = select_dataset()
                     if dataset:
-                        user_input = os.path.basename(dataset)
+                        # Pass the selected dataset to the orchestrator as if typed
+                        print(f"\n{Colors.CYAN}→{Colors.ENDC} Selected: {dataset}\n")
+                        response = await orchestrator.route_request(dataset)
+                        print(f"\n{Colors.CYAN}→{Colors.ENDC} {response}\n")
                     else:
                         print_warning("No dataset selected")
-                        continue
+                    continue
                 else:
                     print_warning("Can only select dataset in IDLE state. Type 'reset' first.")
+                    continue
+
+            elif user_input.lower() == 'start':
+                if session_manager.state == "IDLE":
+                    dataset = select_dataset()
+                    if dataset:
+                        # Pass the selected dataset to the orchestrator as if typed
+                        print(f"\n{Colors.CYAN}→{Colors.ENDC} Selected: {dataset}\n")
+                        response = await orchestrator.route_request(dataset)
+                        print(f"\n{Colors.CYAN}→{Colors.ENDC} {response}\n")
+                    else:
+                        print_warning("No dataset selected")
                     continue
             
             print() 

@@ -34,14 +34,11 @@ class QAAgent(BaseAgent):
         response = await self.generate(prompt)
         
         # --- FIX STARTS HERE ---
-        # If the model refuses, return the text directly
-        if "only answer questions about the dataset" in response:
-            self.log_step("Q&A", "Question deemed irrelevant.")
+        code = self._extract_code(response)
+        if not code: 
+            # Fallback: Return the raw text if it's a direct answer/refusal
             return response.replace("```", "").strip()
         # --- FIX ENDS HERE ---
-
-        code = self._extract_code(response)
-        if not code: return "Could not generate executable code to answer your question."
         
         self.log_step("Code Gen", code)
 
