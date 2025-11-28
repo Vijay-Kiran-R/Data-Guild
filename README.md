@@ -122,13 +122,7 @@ graph TB
     INFRA --> TOOLS[Tools<br/>DataOps, Visualizer]
     INFRA --> OBS[Observability<br/>OpenTelemetry]
     
-    style UI fill:#e1f5ff
-    style ORC fill:#fff3cd
-    style STEW fill:#d4edda
-    style REF fill:#d4edda
-    style SQUAD fill:#f8d7da
-    style CRIT fill:#d4edda
-    style INFRA fill:#e2e3e5
+   
 ```
 
 ---
@@ -150,7 +144,6 @@ flowchart LR
     D --> H[Domain Validation]
     E & F & G & H --> I[State: INGESTING → CLEANING]
     
-    style D fill:#90EE90
 ```
 
 **Outputs:**
@@ -175,9 +168,6 @@ flowchart TD
     E -->|No| G[Error Analysis<br/>& Code Rewrite]
     G --> C
     
-    style B fill:#FFD700
-    style F fill:#90EE90
-    style G fill:#FF6B6B
 ```
 
 **Self-Healing Loop:**
@@ -213,9 +203,6 @@ flowchart TD
     G -->|Yes| I[Deep Dive Tasks<br/>Iterative Loop]
     I --> F
     
-    style B fill:#FF69B4
-    style F fill:#87CEEB
-    style I fill:#FFA500
 ```
 
 **Parallel Analysis Components:**
@@ -266,9 +253,6 @@ flowchart TD
     E --> H[✗ Unverified]
     F & G & H --> I[Executive Summary<br/>Key findings<br/>Business implications<br/>Recommended actions]
     
-    style B fill:#FF4500
-    style D fill:#4169E1
-    style I fill:#32CD32
 ```
 
 **Verification Example:**
@@ -299,7 +283,6 @@ flowchart LR
     D --> E[Computation<br/>If needed]
     E --> F[Conversational Response]
     
-    style B fill:#9370DB
 ```
 
 **Capabilities:**
@@ -309,7 +292,11 @@ flowchart LR
 - Calculation support ("Calculate year-over-year growth")
 
 ---
+The system operates as a strict pipeline of specialized stages, orchestrated by a central state machine.
 
+![Autonomous Agent Guild Flow](Data_Guild_WorkFlow.png)
+
+---
 ## 🚀 Key Innovations
 
 ### 1. ⚡ Parallel Processing with Iterative Deep Dives
